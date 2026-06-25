@@ -1,9 +1,8 @@
-// API Configuration
+
 const API_URL = 'http://127.0.0.1:8000';
 let sessionId = localStorage.getItem('sessionId') || null;
 let currentPdfId = null;
 
-// --- DOM References ---
 const pages = {
     login: document.getElementById('loginPage'),
     dashboard: document.getElementById('dashboardPage'),
@@ -18,48 +17,40 @@ const logoutBtn = document.getElementById('logoutBtn');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const navLinksContainer = document.getElementById('navLinks');
 
-// Auth
 const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
 const authTabs = document.querySelectorAll('.auth-tab');
 const loginError = document.getElementById('loginError');
 const signupError = document.getElementById('signupError');
 
-// Dashboard
 const uploadForm = document.getElementById('uploadForm');
 const pdfFile = document.getElementById('pdfFile');
 const uploadStatus = document.getElementById('uploadStatus');
 const pdfList = document.getElementById('pdfList');
 const userNameDisplay = document.getElementById('userNameDisplay');
 
-// Chat
 const chatPdfList = document.getElementById('chatPdfList');
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const chatSendBtn = document.getElementById('chatSendBtn');
 
-// Quiz
 const quizPdfSelect = document.getElementById('quizPdfSelect');
 const quizCount = document.getElementById('quizCount');
 const generateQuizBtn = document.getElementById('generateQuizBtn');
 const quizContent = document.getElementById('quizContent');
 
-// Flashcards
 const flashcardPdfSelect = document.getElementById('flashcardPdfSelect');
 const generateFlashcardsBtn = document.getElementById('generateFlashcardsBtn');
 const flashcardContainer = document.getElementById('flashcardContainer');
 
-// Study Planner
 const plannerSubjects = document.getElementById('plannerSubjects');
 const plannerDays = document.getElementById('plannerDays');
 const plannerHours = document.getElementById('plannerHours');
 const generatePlanBtn = document.getElementById('generatePlanBtn');
 const plannerResult = document.getElementById('plannerResult');
 
-// Drop zone
 const dropZone = document.getElementById('dropZone');
 
-// --- Utility Functions ---
 
 function showPage(pageId) {
     Object.keys(pages).forEach(key => {
@@ -97,7 +88,6 @@ function showError(element, message) {
     }, 5000);
 }
 
-// --- Auth Functions ---
 
 async function checkSession() {
     if (!sessionId) return false;
@@ -173,7 +163,6 @@ async function logout() {
             body: new URLSearchParams({ session_id: sessionId }),
         });
     } catch (error) {
-        // Ignore errors on logout
     }
     
     sessionId = null;
@@ -182,7 +171,6 @@ async function logout() {
     chatMessages.innerHTML = '<div class="chat-welcome"><p>👋 Select a PDF and start asking questions!</p></div>';
 }
 
-// --- Dashboard Functions ---
 
 async function loadDashboard() {
     await loadPdfs();
@@ -333,7 +321,6 @@ async function deletePdf(pdfId) {
     }
 }
 
-// --- Chat Functions ---
 
 function openChat(pdfId) {
     showPage('chat');
@@ -431,7 +418,6 @@ function addMessage(type, content, sources = '') {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// --- Quiz Functions - ONLY QUIZ FIXED ---
 
 
 async function generateQuiz() {
@@ -452,7 +438,6 @@ async function generateQuiz() {
         console.log('📝 Number of questions:', numQuestions);
         console.log('🔑 Session ID:', sessionId);
         
-        // Send session_id as query parameter like chat does
         const url = `${API_URL}/api/generate-quiz?session_id=${sessionId}`;
         console.log('  - URL:', url);
         
@@ -518,7 +503,6 @@ function renderQuiz(questions) {
         let options = [];
         let answer = '';
         
-        // Handle different formats
         if (typeof q === 'string') {
             const lines = q.split('\n');
             lines.forEach(line => {
@@ -566,9 +550,6 @@ function showAllAnswers() {
     });
 }
 
-// --- Flashcard Functions ---
-
-// --- FLASHCARD FUNCTIONS - FIXED ---
 
 async function generateFlashcards() {
     const pdfId = flashcardPdfSelect.value;
@@ -610,7 +591,6 @@ async function generateFlashcards() {
     generateFlashcardsBtn.textContent = 'Generate Flashcards';
 }
 
-// --- STUDY PLANNER FUNCTIONS - FIXED ---
 
 async function generateStudyPlan() {
     const subjects = plannerSubjects.value.trim();
@@ -681,7 +661,6 @@ function renderFlashcards(flashcards) {
     `).join('');
 }
 
-// --- Study Planner Functions ---
 
 async function generateStudyPlan() {
     const subjects = plannerSubjects.value.trim();
@@ -724,7 +703,6 @@ async function generateStudyPlan() {
     generatePlanBtn.textContent = 'Generate Study Plan';
 }
 
-// --- Event Listeners ---
 
 authTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -815,7 +793,6 @@ generateQuizBtn.addEventListener('click', generateQuiz);
 generateFlashcardsBtn.addEventListener('click', generateFlashcards);
 generatePlanBtn.addEventListener('click', generateStudyPlan);
 
-// --- Initialize ---
 
 async function init() {
     const isValid = await checkSession();

@@ -135,7 +135,6 @@ def call_groq(prompt: str) -> str:
 def root():
     return {"message": "AI Study Buddy API with Groq", "status": "running"}
 
-# --- AUTH ROUTES (UNCHANGED - WORKING) ---
 @app.post("/api/signup")
 def signup(user: UserSignup):
     if user.email in users_db:
@@ -189,7 +188,6 @@ def verify(session_id: str):
         }
     }
 
-# --- PDF ROUTES (UNCHANGED) ---
 @app.post("/api/upload-pdf")
 async def upload_pdf(
     session_id: str = Form(...),
@@ -321,7 +319,6 @@ def delete_pdf(pdf_id: str, session_id: str):
     
     return {"message": "PDF deleted successfully"}
 
-# --- CHAT ROUTE (UNCHANGED - WORKING) ---
 @app.post("/api/chat")
 async def chat(request: ChatRequest, session_id: str):
     if session_id not in sessions:
@@ -387,7 +384,6 @@ Answer:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing chat: {str(e)}")
 
-# --- QUIZ ROUTE - FIXED ---
 @app.post("/api/generate-quiz")
 def generate_quiz(request: QuizRequest, session_id: str):
     print(f"\n📝 Quiz request received")
@@ -470,7 +466,6 @@ Generate exactly {request.num_questions} questions:
             'answer': current_answer or 'Answer not specified'
         })
     
-    # Fallback parsing
     if len(questions) == 0:
         print("  - Trying fallback parsing...")
         q_blocks = re.split(r'(Q\d+[:.])', response)
@@ -510,7 +505,6 @@ Generate exactly {request.num_questions} questions:
         "total": len(questions)
     }
 
-# --- OTHER ROUTES (UNCHANGED) ---
 @app.post("/api/summarize")
 def summarize(request: SummarizeRequest, session_id: str):
     if session_id not in sessions:
